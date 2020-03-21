@@ -41,6 +41,7 @@ static int cmd_q(char *args) {
 }
 
 static int cmd_help(char *args);
+static int cmd_si(char *args);
 
 static struct {
   char *name;
@@ -50,6 +51,7 @@ static struct {
   { "help", "Display informations about all supported commands", cmd_help },
   { "c", "Continue the execution of the program", cmd_c },
   { "q", "Exit NEMU", cmd_q },
+  { "si","单步执行",cmd_si },
 
   /* TODO: Add more commands */
 
@@ -76,6 +78,22 @@ static int cmd_help(char *args) {
       }
     }
     printf("Unknown command '%s'\n", arg);
+  }
+  return 0;
+}
+
+static int cmd_si(char *args){
+  int i=0;//指令数目
+  char *arg=strtok(NULL," ");/*这个是看上面的函数的，之后我百度了一下，发现
+  这个strtok函数的用处，先用NULL来承接命令，为后面的sscanf函数准备*/
+  if(!arg)
+	cpu_exec(1);//si与si 1是等价的
+  else{
+  	sscanf(arg,"%d",&i);/*sscanf函数是来传递数字给i的，也就是执行多少次指令*/
+	if(i<=0)
+		cpu_exec(-1);//与cmd_c一样
+	else
+		cpu_exec(i);
   }
   return 0;
 }
