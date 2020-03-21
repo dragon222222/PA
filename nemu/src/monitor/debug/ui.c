@@ -42,6 +42,7 @@ static int cmd_q(char *args) {
 
 static int cmd_help(char *args);
 static int cmd_si(char *args);
+static int cmd_info(char *args);
 
 static struct {
   char *name;
@@ -52,6 +53,7 @@ static struct {
   { "c", "Continue the execution of the program", cmd_c },
   { "q", "Exit NEMU", cmd_q },
   { "si","单步执行",cmd_si },
+  { "info","打印寄存器",cmd_info},
 
   /* TODO: Add more commands */
 
@@ -95,6 +97,24 @@ static int cmd_si(char *args){
 	else
 		cpu_exec(i);
   }
+  return 0;
+}
+
+static int cmd_info(char *args){
+  int m=0,n=0;
+  char *arg=strtok(NULL," ");//与之前的函数类似，以此判断要执行的指令
+  if(strcmp(arg,"r")==0){
+  	for(;m<8;m++)
+		printf("%s:       %8x\n",regsl[m],cpu.gpr[m]._32);
+	for(m=0;m<8;m++)
+                printf("%s:       %8x\n",regsw[m],cpu.gpr[m]._16);
+	for(m=0;m<8;m++)
+		for(;n<8;n++)
+			 printf("%s:       %8x\n",regsb[m],cpu.gpr[m]._8[n]);
+  /*三种寄存器，32、16以及8位，都是8个，其中8位的二维的*/
+  }
+  else if(strcmp(arg,"w")==0)
+	  printf("暂时未开始!见谅!");
   return 0;
 }
 
