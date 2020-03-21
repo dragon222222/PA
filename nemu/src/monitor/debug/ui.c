@@ -101,17 +101,18 @@ static int cmd_si(char *args){
 }
 
 static int cmd_info(char *args){
-  int m=0,n=0;
+  int m=0,n;
   char *arg=strtok(NULL," ");//与之前的函数类似，以此判断要执行的指令
   if(strcmp(arg,"r")==0){
   	for(;m<8;m++)
 		printf("%s:       %8x\n",regsl[m],cpu.gpr[m]._32);
 	for(m=0;m<8;m++)
                 printf("%s:       %8x\n",regsw[m],cpu.gpr[m]._16);
-	for(m=0;m<8;m++)
-		for(;n<8;n++)
+	for(m=0;m<8;m++){
+		for(n=0;n<2;n++)
 			 printf("%s:       %8x\n",regsb[m],cpu.gpr[m]._8[n]);
-  /*三种寄存器，32、16以及8位，都是8个，其中8位的二维的*/
+	}
+  /*三种寄存器，32、16以及8位，都是8个，其中8位的有两个维度的*/
   }
   else if(strcmp(arg,"w")==0)
 	  printf("暂时未开始!见谅!");
