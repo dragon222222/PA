@@ -52,8 +52,8 @@ static struct {
   { "help", "Display informations about all supported commands", cmd_help },
   { "c", "Continue the execution of the program", cmd_c },
   { "q", "Exit NEMU", cmd_q },
-  { "si","单步执行",cmd_si },
-  { "info","打印寄存器",cmd_info},
+  { "si","Single step execution",cmd_si },
+  { "info","Print register",cmd_info},
 
   /* TODO: Add more commands */
 
@@ -115,7 +115,7 @@ static int cmd_info(char *args){
   /*三种寄存器，32、16以及8位，都是8个，其中8位的有两个维度的*/
   }
   else if(strcmp(arg,"w")==0)
-	  printf("暂时未开始!见谅!");
+	  printf("Not started yet! Forgive me!");
   return 0;
 }
 
