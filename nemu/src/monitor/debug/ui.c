@@ -140,8 +140,8 @@ static int cmd_x(char *args){
   for(i=0;i<m;i++){
   	printf("%#x    ",addr);
 	n=vaddr_read(addr,4);
-	printf("%#x     ",n);
-	show_bytes((byte_pointer)&n,sizeof(int));
+	printf("%#x      ",n);
+	show_bytes((byte_pointer)&n,sizeof(int));//调用函数
 	addr+=4;//每次加4
   }
   return 0;
