@@ -8,6 +8,7 @@
 #include <readline/history.h>
 
 void cpu_exec(uint64_t);
+typedef unsigned char *byte_pointer;//辅助cmd_x函数打印字节顺序
 
   
  
@@ -43,6 +44,7 @@ static int cmd_q(char *args) {
 static int cmd_help(char *args);
 static int cmd_si(char *args);
 static int cmd_info(char *args);
+static int cmd_x(char *args);
 
 static struct {
   char *name;
@@ -54,6 +56,7 @@ static struct {
   { "q", "Exit NEMU", cmd_q },
   { "si","Single step execution",cmd_si },
   { "info","Print register",cmd_info},
+  { "x","Scan memory",cmd_x},
 
   /* TODO: Add more commands */
 
@@ -115,7 +118,31 @@ static int cmd_info(char *args){
   /*三种寄存器，32、16以及8位，都是8个，其中8位的有两个维度的*/
   }
   else if(strcmp(arg,"w")==0)
-	  printf("Not started yet! Forgive me!");
+	  printf("Not started yet! Forgive me!\n");
+  return 0;
+}
+
+void show_bytes(byte_pointer start, int len) {//辅助函数，打印字节顺序
+     int i;
+     for (i = 0; i < len; i++)
+     printf("%.2x ", start[i]);   
+     printf("\n");
+}
+
+static int cmd_x(char *args){
+  int i,m,n; //m是输出的行数，n是相应地址的数据
+  vaddr_t addr;//由memory.c中可知vaddr的相关函数以及定义
+  char *arg1=strtok(NULL," ");
+  char *arg2=strtok(NULL," ");
+  sscanf(arg1,"%d",&m);
+  sscanf(arg2,"%x",&addr);
+  printf("Address    Dword block    Byte sequence\n");
+  for(i=0;i<m;i++){
+  	printf("%#x    ",addr);
+	n=vaddr_read(addr,4);
+	printf("%#x    ",n);
+	show_bytes((byte_pointer)&n,sizeof(int));
+  }
   return 0;
 }
 
