@@ -45,6 +45,7 @@ static int cmd_help(char *args);
 static int cmd_si(char *args);
 static int cmd_info(char *args);
 static int cmd_x(char *args);
+static int cmd_p(char *args);
 
 static struct {
   char *name;
@@ -57,6 +58,7 @@ static struct {
   { "si","Single step execution",cmd_si },
   { "info","Print register",cmd_info},
   { "x","Scan memory",cmd_x},
+  { "p","Solve expression",cmd_p},
 
   /* TODO: Add more commands */
 
@@ -144,6 +146,17 @@ static int cmd_x(char *args){
 	show_bytes((byte_pointer)&n,sizeof(int));//调用函数
 	addr+=4;//每次加4
   }
+  return 0;
+}
+
+static int cmd_p(char *args){
+  char *arg=strtok(NULL,"@");
+  bool i=true;
+  int j= expr(arg,&i);
+  if(i)
+	  printf("%#x\n",j);
+  else 
+	  printf("FAIL\n");
   return 0;
 }
 
