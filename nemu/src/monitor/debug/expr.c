@@ -66,7 +66,13 @@ typedef struct token {
 } Token;
 
 Token tokens[32];
-int nr_token;
+int nr_token;//全局变量，看仔细一点呀大兄弟
+
+void Auxiliary(int i,int j,char *a){    //辅助函数，用来帮助make_token函数
+  tokens[nr_token].type = rules[i].token_type;//这里rule在开头
+  strncpy(tokens[nr_token].str,a,j);/*这里我用了strncpy函数，strncpy是为拷贝字符而生的，而strcpy是拷贝字符串而生的,我这里需要的是“字符”.*/
+}
+
 
 static bool make_token(char *e) {
   int position = 0;
@@ -90,11 +96,62 @@ static bool make_token(char *e) {
          * to record the token in the array `tokens'. For certain types
          * of tokens, some extra actions should be performed.
          */
-
+        if(rules[i].token_type==TK_NOTYPE) continue;
         switch (rules[i].token_type) {
-          default: TODO();
+		case '+':{
+				 Auxiliary(i,substr_len,substr_start);
+				 nr_token++;
+			 }break;
+ 		case '-':{
+                                 Auxiliary(i,substr_len,substr_start);
+                                 nr_token++;
+                         }break;
+		case '*':{
+                                 Auxiliary(i,substr_len,substr_start);
+                                 nr_token++;
+                         }break;
+		case '/':{
+                                 Auxiliary(i,substr_len,substr_start);
+                                 nr_token++;
+                         }break;
+		case TK_EQ:{
+                                 Auxiliary(i,substr_len,substr_start);
+                                 nr_token++;
+                         }break;
+		case TK_UEQ:{
+                                 Auxiliary(i,substr_len,substr_start);
+                                 nr_token++;
+                         }break;
+		case TK_ST:{
+                                 Auxiliary(i,substr_len,substr_start);
+                                 nr_token++;
+                         }break;
+		case TK_TEN:{
+                                 Auxiliary(i,substr_len,substr_start);
+                                 nr_token++;
+                         }break;
+		case '&':{
+                                 Auxiliary(i,substr_len,substr_start);
+                                 nr_token++;
+                         }break;
+		case '|':{
+                                 Auxiliary(i,substr_len,substr_start);
+                                 nr_token++;
+                         }break;
+		case '!':{
+                                 Auxiliary(i,substr_len,substr_start);
+                                 nr_token++;
+                         }break;
+		case '(':{
+                                 Auxiliary(i,substr_len,substr_start);
+                                 nr_token++;
+                         }break;
+		case ')':{
+                                 Auxiliary(i,substr_len,substr_start);
+                                 nr_token++;
+                         }break;
+          default:assert(0);//出错
         }
-
         break;
       }
     }
