@@ -137,7 +137,16 @@ static int cmd_x(char *args){
   char *arg1=strtok(NULL," ");
   char *arg2=strtok(NULL," ");
   sscanf(arg1,"%d",&m);
-  sscanf(arg2,"%x",&addr);
+  if(arg2[0]!='0'){//判断不是16进制地址
+    bool i =true;
+    addr=expr(arg2,&i);
+    if(i==false){
+    	printf("表达式求解失败！\n");
+	return 0;
+    }
+  }
+  else	  
+  	sscanf(arg2,"%x",&addr);
   printf("Address    Dword block    Byte sequence\n");
   for(i=0;i<m;i++){
   	printf("%#x    ",addr);
