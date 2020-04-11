@@ -226,12 +226,14 @@ uint32_t eval(int p,int q){
         tokens[p].str[i] = tokens[p].str[i + 1];//把$号去掉
       if(strcmp(tokens[p].str,"eip") == 0) //如果是eip寄存器
         num= cpu.eip;
-      else
-          for(int i = 0;i < 8;i ++)
+      else{
+          for(int i = 0;i < 8;i ++){
             if(strcmp(tokens[p].str,regsl[i]) == 0) {//规定只有32位寄存器
               num=cpu.gpr[i]._32;
               break;
             }
+	  }
+	}
     }
     return num;
   }
@@ -258,7 +260,7 @@ uint32_t eval(int p,int q){
       case TK_UEQ: return m!= n;
       case '&': return m& n;
       case '|': return m|n;
-      default: assert(0);
+      //default: assert(0);
     }
   }
   return 0;
