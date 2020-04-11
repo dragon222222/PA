@@ -5,6 +5,7 @@
  */
 #include <sys/types.h>
 #include <regex.h>
+#include<assert.h>//assert函数
 
 enum {
   TK_NOTYPE = 256, TK_EQ=1,TK_UEQ=0,TK_ST=16,TK_TEN=10,TK_REG=225,TK_IAC=2//IAC解引英文缩写
@@ -150,7 +151,7 @@ static bool make_token(char *e) {
                                  Auxiliary(i,substr_len,substr_start);
                                  nr_token++;
                          }break;
-               // default:assert(0);//出错
+                default:assert(0);//出错
         }
         break;
       }
