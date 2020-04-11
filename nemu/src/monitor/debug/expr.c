@@ -150,7 +150,7 @@ static bool make_token(char *e) {
                                  Auxiliary(i,substr_len,substr_start);
                                  nr_token++;
                          }break;
-                default:assert(0);//出错
+               // default:assert(0);//出错
         }
         break;
       }
