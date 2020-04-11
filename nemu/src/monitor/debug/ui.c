@@ -163,7 +163,7 @@ static int cmd_p(char *args){
   bool i=true;
   int j= expr(arg,&i);
   if(i)
-	  printf("%#x\n",j);
+	  printf("%d\n",j);
   else 
 	  printf("FAIL\n");
   return 0;
