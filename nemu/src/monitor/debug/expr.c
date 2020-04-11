@@ -69,10 +69,11 @@ typedef struct token {
 Token tokens[32];
 int nr_token;//全局变量，看仔细一点呀大兄弟
 
-void Auxiliary(int i,int j,char *a){    //辅助函数，用来帮助make_token函数
+/*void Auxiliary(int i,int j,char *a){    //辅助函数，用来帮助make_token函数
   tokens[nr_token].type = rules[i].token_type;//这里rule在开头
-  strncpy(tokens[nr_token].str,a,j);/*这里我用了strncpy函数，strncpy是为拷贝字符而生的，而strcpy是拷贝字符串而生的,我这里需要的是“字符”.*/
+  strncpy(tokens[nr_token].str,a,j);//这里我用了strncpy函数，strncpy是为拷贝字符而生的，而strcpy是拷贝字符串而生的,我这里需要的是“字符”.
 }
+*/
 
 
 static bool make_token(char *e) {
@@ -100,57 +101,75 @@ static bool make_token(char *e) {
         if(rules[i].token_type==TK_NOTYPE) continue;
         switch (rules[i].token_type) {
 		case '+':{
-				 Auxiliary(i,substr_len,substr_start);
+				 tokens[nr_token].type = rules[i].token_type;
+           			 strncpy(tokens[nr_token].str,substr_start,substr_len);
 				 nr_token++;
 			 }break;
  		case '-':{
-                                 Auxiliary(i,substr_len,substr_start);
+                                 tokens[nr_token].type = rules[i].token_type;
+           			 strncpy(tokens[nr_token].str,substr_start,substr_len);
                                  nr_token++;
                          }break;
 		case '*':{
-                                 Auxiliary(i,substr_len,substr_start);
+                                 tokens[nr_token].type = rules[i].token_type;
+          			 strncpy(tokens[nr_token].str,substr_start,substr_len);
                                  nr_token++;
                          }break;
 		case '/':{
-                                 Auxiliary(i,substr_len,substr_start);
+                           	 tokens[nr_token].type = rules[i].token_type;
+               			 strncpy(tokens[nr_token].str,substr_start,substr_len);
+                                 nr_token++;
+                         }break;
+		case TK_REG:{
+                                 tokens[nr_token].type = rules[i].token_type;
+            		         strncpy(tokens[nr_token].str,substr_start,substr_len);
                                  nr_token++;
                          }break;
 		case TK_EQ:{
-                                 Auxiliary(i,substr_len,substr_start);
-                                 nr_token++;
-                         }break;
-		case TK_UEQ:{
-                                 Auxiliary(i,substr_len,substr_start);
-                                 nr_token++;
-                         }break;
-		case TK_ST:{
-                                 Auxiliary(i,substr_len,substr_start);
+                                 tokens[nr_token].type = rules[i].token_type;
+           			 strncpy(tokens[nr_token].str,substr_start,substr_len);
                                  nr_token++;
                          }break;
 		case TK_TEN:{
-                                 Auxiliary(i,substr_len,substr_start);
+                                 tokens[nr_token].type = rules[i].token_type;
+           			 strncpy(tokens[nr_token].str,substr_start,substr_len);
                                  nr_token++;
                          }break;
-		case '&':{
-                                 Auxiliary(i,substr_len,substr_start);
-                                 nr_token++;
-                         }break;
-		case '|':{
-                                 Auxiliary(i,substr_len,substr_start);
-                                 nr_token++;
-                         }break;
-		case '!':{
-                                 Auxiliary(i,substr_len,substr_start);
+		case TK_ST:{
+                                 tokens[nr_token].type = rules[i].token_type;
+           			 strncpy(tokens[nr_token].str,substr_start,substr_len);
                                  nr_token++;
                          }break;
 		case '(':{
-                                 Auxiliary(i,substr_len,substr_start);
+                                 tokens[nr_token].type = rules[i].token_type;
+           			 strncpy(tokens[nr_token].str,substr_start,substr_len);
                                  nr_token++;
                          }break;
 		case ')':{
-                                 Auxiliary(i,substr_len,substr_start);
+                                 tokens[nr_token].type = rules[i].token_type;
+           			 strncpy(tokens[nr_token].str,substr_start,substr_len);
                                  nr_token++;
                          }break;
+		case TK_UEQ:{
+                                 tokens[nr_token].type = rules[i].token_type;
+           			 strncpy(tokens[nr_token].str,substr_start,substr_len);
+                                 nr_token++;
+                         }break;
+		case '&':{
+                                 tokens[nr_token].type = rules[i].token_type;
+           			 strncpy(tokens[nr_token].str,substr_start,substr_len);
+                                 nr_token++;
+                         }break;
+		case '|':{
+                                 tokens[nr_token].type = rules[i].token_type;
+           			 strncpy(tokens[nr_token].str,substr_start,substr_len);
+                                 nr_token++;
+                         }break;
+		case '!':{
+				 tokens[nr_token].type = rules[i].token_type;
+           			 strncpy(tokens[nr_token].str,substr_start,substr_len);
+				 nr_token++;
+			 }
                 //default:assert(0);//出错
         }
         break;
@@ -219,9 +238,9 @@ uint32_t eval(int p,int q){
     int num= 0;
     if(tokens[p].type == TK_ST)//十六进制转化成十六进制数
           sscanf(tokens[p].str, "%x",&num);
-    if(tokens[p].type == TK_TEN)//十进制数转化成十进制数
+    else if(tokens[p].type == TK_TEN)//十进制数转化成十进制数
           sscanf(tokens[p].str, "%d",&num);
-    if(tokens[p].type == TK_REG) {//是寄存器
+    else if(tokens[p].type == TK_REG) {//是寄存器
       for(int i = 0;i < 4;i ++)
         tokens[p].str[i] = tokens[p].str[i + 1];//把$号去掉
       if(strcmp(tokens[p].str,"eip") == 0) //如果是eip寄存器
@@ -241,26 +260,26 @@ uint32_t eval(int p,int q){
     return eval(p + 1, q - 1);
   }
   else{
-    int x,m,n;
-    x= find_dominated_op(p,q);
-    if(x==p&&tokens[p].type==TK_IAC)//指针解引用情况
+    int op,val1,val2;
+    op= find_dominated_op(p,q);
+    if(op==p&&tokens[p].type==TK_IAC)//指针解引用情况
             return vaddr_read(eval(p+1,q),4);//此时的地址
-    if(x==p&&tokens[p].type=='-')//负数表达式取负
-            return -eval(x+1,q);
-    if(x==p&&tokens[p].type=='!')//取非
-            return !eval(x+1,q);
-    m= eval(p, x-1);
-    n= eval(x+1, q);
-    switch (tokens[x].type) {
-      case '+': return m + n;
-      case '-': return m- n;
-      case '*': return m * n;
-      case '/': return m/ n;
-      case TK_EQ: return m == n;
-      case TK_UEQ: return m!= n;
-      case '&': return m& n;
-      case '|': return m|n;
-      //default: assert(0);
+    if(op==p&&tokens[p].type=='-')//负数表达式取负
+            return -eval(op+1,q);
+    if(op==p&&tokens[p].type=='!')//取非
+            return !eval(op+1,q);
+    val1= eval(p,op-1);
+    val2= eval(op+1, q);
+    switch (tokens[op].type) {
+      case '+': return val1 + val2;
+      case '-': return val1- val2;
+      case '*': return val1* val2;
+      case '/': return val1/ val2;
+      case TK_EQ: return val1 == val2;
+      case TK_UEQ: return val1!= val2;
+      case '&': return val1& val2;
+      case '|': return val1|val2;
+      default: assert(0);
     }
   }
   return 0;
