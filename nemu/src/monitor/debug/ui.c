@@ -46,6 +46,9 @@ static int cmd_si(char *args);
 static int cmd_info(char *args);
 static int cmd_x(char *args);
 static int cmd_p(char *args);
+static int cmd_w(char *args);
+static int cmd_d(char *args);
+static int cmd_b(char *args);
 
 static struct {
   char *name;
@@ -59,6 +62,9 @@ static struct {
   { "info","Print register",cmd_info},
   { "x","Scan memory",cmd_x},
   { "p","Solve expression",cmd_p},
+  { "w","Watch point",cmd_w},
+  { "d","Delete point",cmd_d},
+  { "b","Break point",cmd_b},
 
   /* TODO: Add more commands */
 
@@ -119,9 +125,42 @@ static int cmd_info(char *args){
 	}
   /*三种寄存器，32、16以及8位，都是8个，其中8位的有两个维度的*/
   }
-  else if(strcmp(arg,"w")==0)
-	  printf("Not started yet! Forgive me!\n");
+  else if(strcmp(arg,"w")==0){
+    printf("NO Expr         Old Value\n");
+    list_watchpoint();
+  }
+	  
   return 0;
+}
+
+static int cmd_d(char *args){
+	char *arg=strtok(NULL,"@");
+	int NO;
+	sscanf(arg,"%d",&NO);
+	delete_watchpoint(NO);
+    	return 0;
+}
+
+static int cmd_w(char *args){
+
+	set_watchpoint(args);
+        return 0;
+}
+
+static int cmd_b(char *args){
+	bool s;
+	vaddr_t add=expr(args+1,&s);
+	if(!s)
+	{
+		//printf("break point error\n");
+		return 0;
+	}
+	sprintf(args,"$eip==0x%x",add);
+	WP *p;
+	p=new_wp();
+	p->new_val=expr(args,&s);
+	printf("break point NO%d\taddress 0x%08x\n",p->NO,cpu.eip);
+	return 0;
 }
 
 void show_bytes(byte_pointer start, int len) {//辅助函数，打印字节顺序
