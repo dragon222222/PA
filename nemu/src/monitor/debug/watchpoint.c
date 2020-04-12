@@ -118,10 +118,10 @@ WP* scan_watchpoint()
 		p->new_val=expr(p->expr,&s);//计算新值
 		if(p->old_val!=p->new_val)//如果值变化了
 		{
-			printf("\nHit watchpoint %d at address 0x%08x\n\n",p->NO,cpu.eip);
-			printf("expr=           %s\t\n",p->expr);
-			printf("old_value=      0x%08x\n",p->old_val);
-			printf("new_value=      0x%08x\n",p->new_val);
+			printf("Hit watchpoint %d at address %#8x\n",p->NO,cpu.eip);
+			printf("expr=         %s\n",p->expr);
+			printf("old_value=     %#x\n",p->old_val);
+			printf("new_value=     %#x\n",p->new_val);
 			printf("promgram paused\n");
 			break;
 		}
