@@ -8,7 +8,8 @@
 #include<assert.h>//assert函数
 
 enum {
-  TK_NOTYPE = 256, TK_EQ=1,TK_UEQ=0,TK_ST=16,TK_TEN=10,TK_REG=225,TK_IAC=2//IAC解引英文缩写
+  TK_NOTYPE = 256, TK_EQ,TK_UEQ,TK_ST,TK_TEN,TK_REG,TK_IAC,//IAC解引英文缩写
+  TK_BIG_OR_EQ,TK_SMA_OR_EQ,TK_MOVL,TK_MOVR,
 
   /* TODO: Add more token types */
 
@@ -38,6 +39,10 @@ static struct rule {
   {"\\$[a-ehilpx]{2,3}", TK_REG},  //寄存器
   {"\\(", '('},     //左括号
   {"\\)", ')'},    //右括号
+  {">=",TK_BIG_OR_EQ},
+  {"<=",TK_SMA_OR_EQ},
+  {"<<",TK_MOVL},
+  {">>",TK_MOVR},
 };
 
 #define NR_REGEX (sizeof(rules) / sizeof(rules[0]) )
@@ -69,12 +74,6 @@ typedef struct token {
 Token tokens[32];
 int nr_token;//全局变量，看仔细一点呀大兄弟
 
-/*void Auxiliary(int i,int j,char *a){    //辅助函数，用来帮助make_token函数
-  tokens[nr_token].type = rules[i].token_type;//这里rule在开头
-  strncpy(tokens[nr_token].str,a,j);//这里我用了strncpy函数，strncpy是为拷贝字符而生的，而strcpy是拷贝字符串而生的,我这里需要的是“字符”.
-}
-*/
-
 
 static bool make_token(char *e) {
   int position = 0;
@@ -98,79 +97,12 @@ static bool make_token(char *e) {
          * to record the token in the array `tokens'. For certain types
          * of tokens, some extra actions should be performed.
          */
-        if(rules[i].token_type==TK_NOTYPE) continue;
         switch (rules[i].token_type) {
-		case '+':{
-				 tokens[nr_token].type = rules[i].token_type;
-           			 strncpy(tokens[nr_token].str,substr_start,substr_len);
-				 nr_token++;
-			 }break;
- 		case '-':{
-                                 tokens[nr_token].type = rules[i].token_type;
-           			 strncpy(tokens[nr_token].str,substr_start,substr_len);
-                                 nr_token++;
-                         }break;
-		case '*':{
-                                 tokens[nr_token].type = rules[i].token_type;
-          			 strncpy(tokens[nr_token].str,substr_start,substr_len);
-                                 nr_token++;
-                         }break;
-		case '/':{
-                           	 tokens[nr_token].type = rules[i].token_type;
-               			 strncpy(tokens[nr_token].str,substr_start,substr_len);
-                                 nr_token++;
-                         }break;
-		case TK_REG:{
-                                 tokens[nr_token].type = rules[i].token_type;
-            		         strncpy(tokens[nr_token].str,substr_start,substr_len);
-                                 nr_token++;
-                         }break;
-		case TK_EQ:{
-                                 tokens[nr_token].type = rules[i].token_type;
-           			 strncpy(tokens[nr_token].str,substr_start,substr_len);
-                                 nr_token++;
-                         }break;
-		case TK_TEN:{
-                                 tokens[nr_token].type = rules[i].token_type;
-           			 strncpy(tokens[nr_token].str,substr_start,substr_len);
-                                 nr_token++;
-                         }break;
-		case TK_ST:{
-                                 tokens[nr_token].type = rules[i].token_type;
-           			 strncpy(tokens[nr_token].str,substr_start,substr_len);
-                                 nr_token++;
-                         }break;
-		case '(':{
-                                 tokens[nr_token].type = rules[i].token_type;
-           			 strncpy(tokens[nr_token].str,substr_start,substr_len);
-                                 nr_token++;
-                         }break;
-		case ')':{
-                                 tokens[nr_token].type = rules[i].token_type;
-           			 strncpy(tokens[nr_token].str,substr_start,substr_len);
-                                 nr_token++;
-                         }break;
-		case TK_UEQ:{
-                                 tokens[nr_token].type = rules[i].token_type;
-           			 strncpy(tokens[nr_token].str,substr_start,substr_len);
-                                 nr_token++;
-                         }break;
-		case '&':{
-                                 tokens[nr_token].type = rules[i].token_type;
-           			 strncpy(tokens[nr_token].str,substr_start,substr_len);
-                                 nr_token++;
-                         }break;
-		case '|':{
-                                 tokens[nr_token].type = rules[i].token_type;
-           			 strncpy(tokens[nr_token].str,substr_start,substr_len);
-                                 nr_token++;
-                         }break;
-		case '!':{
-				 tokens[nr_token].type = rules[i].token_type;
-           			 strncpy(tokens[nr_token].str,substr_start,substr_len);
-				 nr_token++;
-			 }
-                //default:assert(0);//出错
+		case TK_NOTYPE: break;
+                default:{ tokens[nr_token].type = rules[i].token_type;
+			  strncpy (tokens[nr_token].str,substr_start,substr_len);//这里我用了strncpy函数，strncpy是为拷贝字符而生的，而strcpy是拷贝字符串而生的,我这里需要的是“字符”.
+			  nr_token ++;
+			}
         }
         break;
       }
@@ -279,6 +211,10 @@ uint32_t eval(int p,int q){
       case TK_UEQ: return val1!= val2;
       case '&': return val1& val2;
       case '|': return val1|val2;
+      case TK_BIG_OR_EQ:return val1>=val2;
+      case TK_SMA_OR_EQ:return val1<=val2;
+      case TK_MOVL:return val1<<val2;
+      case TK_MOVR:return val1>>val2; 	
       default: assert(0);
     }
   }
@@ -295,7 +231,5 @@ uint32_t expr(char *e, bool *success) {
   for(int i=0;i<nr_token;i++)
           if(tokens[i].type=='*'&&(i==0||tokens[i-1].type=='+'||tokens[i-1].type=='-'||tokens[i-1].type=='*'||tokens[i-1].type=='/'))
                   tokens[i].type=TK_IAC;
-  int p=0;
-  int q=nr_token-1;
-  return eval(p,q);
+  return eval(0,nr_token-1);
 }
