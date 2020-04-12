@@ -76,10 +76,10 @@ int set_watchpoint(char *e)
 	bool s;
 	strcpy(p->expr,e);//存入表达式
 	p->old_val=expr(p->expr,&s);//旧值
-	if(!s){
-		printf("Fail To Eval\n");
-		return 0;
-	}
+	//if(!s){
+	//	printf("Fail To Eval\n");
+	//	return 0;
+	//}
 	printf("Set watchpoint  #%d\n",p->NO);
 	printf("expr=           %s\t\n",p->expr);
 	printf("old_value=      0x%08x\n",p->old_val);
