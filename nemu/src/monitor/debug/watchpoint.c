@@ -70,8 +70,7 @@ void free_wp(WP *wp)
     	wp->old_val=0;
 }
 
-int set_watchpoint(char *e)
-{
+int set_watchpoint(char *e){
 	WP *p=new_wp();//新的监视点
 	bool s=true;
 	strcpy(p->expr,e);//存入表达式
@@ -86,31 +85,27 @@ int set_watchpoint(char *e)
 	return 1;
 }
 
-bool delete_watchpoint(int NO)//直接用free_wp函数
-{
+bool delete_watchpoint(int NO){//直接用free_wp函数
 	 WP *p=&wp_pool[NO];
 	 free_wp(p);
 	 printf("Watchpoint %d deleted\n",NO);
 	 return true;
 }
 
-void info_w(WP *p)//一个简单的辅助函数
-{
+void info_w(WP *p){//一个简单的辅助函数
 	 if(p->next!=NULL)
 		 info_w(p->next);
 	 printf(" %d\t%s\t0x%08x\n",p->NO,p->expr,p->old_val);
 }
 
-void list_watchpoint()
-{
+void list_watchpoint(){
 	WP *p=head;
 	if(p==NULL)
 		printf("Have Not A Watchpoint!\n");
 	info_w(p);//调用函数
 }
 
-WP* scan_watchpoint()
-{
+WP* scan_watchpoint(){
 	WP *p=head;
 	bool s=true;
 	while(p)
