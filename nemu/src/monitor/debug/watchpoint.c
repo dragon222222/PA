@@ -120,9 +120,8 @@ WP* scan_watchpoint(){
 		if(!s)
 			printf("Fail To Eval New_Val In WatchPoint %d\n",p->NO);
 		else{
-		if(p->old_val!=p->new_val)//如果值变化了
+		if(p->new_val!=p->old_val)//如果值变化了
 		{
-			printf("!\n");
 			if(!strncmp(p->expr,"$eip == ",8)) {//是断点表达式
 				printf("Hit break point,program paused\n");
 				break;
@@ -132,6 +131,7 @@ WP* scan_watchpoint(){
 			printf("expr=         %s\n",p->expr);
 			printf("old_value=     %#x\n",p->old_val);
 			printf("new_value=     %#x\n",p->new_val);
+			p->old_val=p->new_val;//更新
 			printf("promgram paused\n");
 			break;
 			}
