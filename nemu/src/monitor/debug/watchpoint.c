@@ -74,14 +74,19 @@ int set_watchpoint(char *e){
 	WP *p=new_wp();//新的监视点
 	bool s=true;
 	strcpy(p->expr,e);//存入表达式
+	if(!strncmp(p->expr,"$eip == ",8)){
+		printf("Set Break Point $eip == ADDR\n");
+	}
+	else{
 	p->old_val=expr(p->expr,&s);//旧值
 	if(!s){
 		printf("Fail To Eval\n");
 		return 0;
 	}
 	printf("Set watchpoint  #%d\n",p->NO);
-	printf("expr=           %s\t\n",p->expr);
-	printf("old_value=      0x%08x\n",p->old_val);
+	printf("expr=           %s\n",p->expr);
+	printf("old_value=      %#x\n",p->old_val);
+	}
 	return 1;
 }
 
@@ -102,7 +107,8 @@ void list_watchpoint(){
 	WP *p=head;
 	if(p==NULL)
 		printf("Have Not A Watchpoint!\n");
-	info_w(p);//调用函数
+	else
+		info_w(p);//调用函数
 }
 
 WP* scan_watchpoint(){
@@ -111,14 +117,25 @@ WP* scan_watchpoint(){
 	while(p)
 	{
 		p->new_val=expr(p->expr,&s);//计算新值
+		if(!s)
+			printf("Fail To Eval New_Val In WatchPoint %d\n",p->NO);
+		else{
 		if(p->old_val!=p->new_val)//如果值变化了
 		{
+			if(!strncmp(p->expr,"$eip == ",8)) {//是断点表达式
+				printf("Hit break point,program paused\n");
+				break;
+			}
+			else{
 			printf("Hit watchpoint %d at address %#8x\n",p->NO,cpu.eip);
 			printf("expr=         %s\n",p->expr);
 			printf("old_value=     %#x\n",p->old_val);
 			printf("new_value=     %#x\n",p->new_val);
+			p->old_val = p->new_val;//旧值更新
 			printf("promgram paused\n");
 			break;
+			}
+		}
 		}
 		p=p->next;
 	}
