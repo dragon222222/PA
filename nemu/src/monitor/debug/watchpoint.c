@@ -131,7 +131,6 @@ WP* scan_watchpoint(){
 			printf("expr=         %s\n",p->expr);
 			printf("old_value=     %#x\n",p->old_val);
 			printf("new_value=     %#x\n",p->new_val);
-			p->old_val = p->new_val;//旧值更新
 			printf("promgram paused\n");
 			break;
 			}
