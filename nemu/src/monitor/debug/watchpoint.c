@@ -122,6 +122,7 @@ WP* scan_watchpoint(){
 		else{
 		if(p->old_val!=p->new_val)//如果值变化了
 		{
+			printf("!\n");
 			if(!strncmp(p->expr,"$eip == ",8)) {//是断点表达式
 				printf("Hit break point,program paused\n");
 				break;
