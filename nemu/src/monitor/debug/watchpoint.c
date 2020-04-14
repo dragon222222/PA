@@ -136,6 +136,7 @@ WP* scan_watchpoint(){
 			break;
 			}
 		}
+		printf("!\n");
 		}
 		p=p->next;
 	}
