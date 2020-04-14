@@ -117,9 +117,9 @@ WP* scan_watchpoint(){
 	while(p)
 	{
 		p->new_val=expr(p->expr,&s);//计算新值
-		//if(!s)
-		//	printf("Fail To Eval New_Val In WatchPoint %d\n",p->NO);
-		//else{
+		if(!s)
+			printf("Fail To Eval New_Val In WatchPoint %d\n",p->NO);
+		else{
 		if(p->old_val!=p->new_val)//如果值变化了
 		{
 			if(!strncmp(p->expr,"$eip == ",8)) {//是断点表达式
@@ -136,7 +136,7 @@ WP* scan_watchpoint(){
 			break;
 			}
 		}
-		//}
+		}
 		p=p->next;
 	}
 	return p;
