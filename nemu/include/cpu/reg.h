@@ -44,7 +44,7 @@ typedef union {
 		unsigned:20;//20位
 	  };
 	  rtlreg_t val;//初值
-  }flags;
+  }eflags;
 } CPU_state;
 
 extern CPU_state cpu;

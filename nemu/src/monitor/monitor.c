@@ -83,7 +83,7 @@ static inline void restart() {
   /* Set the initial instruction pointer. */
   cpu.eip = ENTRY_START;
   
-  cpu.flags.val = 0x00000002;//初值为2
+  cpu.eflags.val = 0x00000002;//初值为2
 #ifdef DIFF_TEST
   init_qemu_reg();
 #endif
