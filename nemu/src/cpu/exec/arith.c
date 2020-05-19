@@ -42,11 +42,11 @@ make_EHelper(sub) {
 
 make_EHelper(cmp) {
   //TODO();
-  printf("运算前：\n");
-  printf("ZF: %d\n",cpu.eflags.ZF);
-  printf("SF: %d\n",cpu.eflags.SF);
-  printf("OF: %d\n",cpu.eflags.OF);
-  printf("运算后：\n");
+  //printf("运算前：\n");
+  //printf("ZF: %d\n",cpu.eflags.ZF);
+  //printf("SF: %d\n",cpu.eflags.SF);
+  //printf("OF: %d\n",cpu.eflags.OF);
+  //printf("运算后：\n");
   rtl_sext(&t1,&id_dest->val,id_dest->width);
   rtl_sext(&t2,&id_src->val,id_src->width);
   rtl_sub(&t0,&t1,&t2);
@@ -55,9 +55,9 @@ make_EHelper(cmp) {
   t3=((((int32_t)(t1)<0)==(((int32_t)(t2)>>31)==0))&&(((int32_t)(t0)<0)!=((int32_t)(t1)<0)));
   rtl_set_OF(&t3);
   rtl_update_ZFSF(&t0,4);
-  printf("ZF: %d\n",cpu.eflags.ZF);
-  printf("SF: %d\n",cpu.eflags.SF);
-  printf("OF: %d\n",cpu.eflags.OF);
+  //printf("ZF: %d\n",cpu.eflags.ZF);
+  //printf("SF: %d\n",cpu.eflags.SF);
+  //printf("OF: %d\n",cpu.eflags.OF);
 
   
   /*printf("运算前：\n");
