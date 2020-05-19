@@ -1,12 +1,13 @@
 #include "nemu.h"
 #include "monitor/monitor.h"
+#include "monitor/watchpoint.h"//加入watchpoint
 
 /* The assembly code of instructions executed is only output to the screen
  * when the number of instructions executed is less than this value.
  * This is useful when you use the `si' command.
  * You can modify this value as you want.
  */
-#define MAX_INSTR_TO_PRINT 10
+#define MAX_INSTR_TO_PRINT 20//将10变为20
 
 int nemu_state = NEMU_STOP;
 
@@ -28,6 +29,9 @@ void cpu_exec(uint64_t n) {
     exec_wrapper(print_flag);
 
 #ifdef DEBUG
+    WP *p = scan_watchpoint();
+    if( p )
+	nemu_state = NEMU_STOP;
     /* TODO: check watchpoints here. */
 
 #endif
