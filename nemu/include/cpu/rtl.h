@@ -3,7 +3,7 @@
 
 #include "nemu.h"
 
-extern rtlreg_t t0, t1, t2, t3,t4,t5;
+extern rtlreg_t t0, t1, t2, t3;
 extern const rtlreg_t tzero;
 
 /* RTL basic instructions */
@@ -198,25 +198,25 @@ static inline void rtl_update_ZF(const rtlreg_t* result, int width) {
   // eflags.ZF <- is_zero(result[width * 8 - 1 .. 0])
   //TODO();
   //cpu.eflags.ZF=((*result&(0xFFFFFFFF>>((4-width)*8)))==0);
-  t4=*result;
+  t2=*result;
   switch (width){
 	  case 1:
-		  t4=(*result & 0x000000ff);
+		  t2=(*result & 0x000000ff);
 		  break;
 	  case 2:
-		  t4=(*result & 0x000000ff);
+		  t2=(*result & 0x000000ff);
                   break;
   }
-  rtl_eq0(&t5,&t4);
-  rtl_set_ZF(&t5);
+  rtl_eq0(&t3,&t2);
+  rtl_set_ZF(&t3);
 }
 
 static inline void rtl_update_SF(const rtlreg_t* result, int width) {
   // eflags.SF <- is_sign(result[width * 8 - 1 .. 0])
   //TODO();
   //cpu.eflags.SF=(((*result&(0xFFFFFFFF>>((4-width)*8)))&(1<<(width*8-1)))!=0);
-  rtl_shri(&t4,result,width*8-1);
-  rtl_set_SF(&t4);
+  rtl_shri(&t3,result,width*8-1);
+  rtl_set_SF(&t3);
 }
 
 static inline void rtl_update_ZFSF(const rtlreg_t* result, int width) {
