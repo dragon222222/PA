@@ -42,9 +42,9 @@ typedef union {
 		unsigned:1;//1位
 		uint32_t OF:1;
 		unsigned:20;//20位
-	  }flags;
-	  rtlreg_t eflags;//初值
-  };
+	  };
+	  rtlreg_t val;//初值
+  }flags;
 } CPU_state;
 
 extern CPU_state cpu;
