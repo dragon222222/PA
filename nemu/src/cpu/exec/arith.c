@@ -60,26 +60,26 @@ make_EHelper(cmp) {
   //printf("OF: %d\n",cpu.eflags.OF);*/
 
   
-  printf("运算前：\n");
-  printf("ZF: %d\n",cpu.eflags.ZF);
-  printf("SF: %d\n",cpu.eflags.SF);
-  printf("OF: %d\n",cpu.eflags.OF);
-  printf("运算后：\n");
+  //printf("运算前：\n");
+  //printf("ZF: %d\n",cpu.eflags.ZF);
+  //printf("SF: %d\n",cpu.eflags.SF);
+  //printf("OF: %d\n",cpu.eflags.OF);
+  //printf("运算后：\n");
   rtl_sub(&t0,&id_dest->val,&id_src->val);
-  printf("id_dest->val:%#x   id_src->val:%#x   to:%#x\n",id_dest->val,id_src->val,t0);
+  //printf("id_dest->val:%#x   id_src->val:%#x   to:%#x\n",id_dest->val,id_src->val,t0);
   rtl_sltu(&t1,&id_dest->val,&t0);
   rtl_update_ZFSF(&t0,id_dest->width);
-  printf("ZF: %d\n",cpu.eflags.ZF);
+  //printf("ZF: %d\n",cpu.eflags.ZF);
   rtl_sltu(&t3,&id_dest->val,&id_src->val);
   rtl_or(&t1,&t3,&t1);
   rtl_set_CF(&t1);
-  printf("SF: %d\n",cpu.eflags.SF);
+  //printf("SF: %d\n",cpu.eflags.SF);
   rtl_xor(&t1,&id_dest->val,&id_src->val);
   rtl_xor(&t2,&id_dest->val,&t0);
   rtl_and(&t1,&t1,&t2);
   rtl_msb(&t1,&t1,id_dest->width);
   rtl_set_OF(&t1);
-  printf("OF: %d\n",cpu.eflags.OF);
+  //printf("OF: %d\n",cpu.eflags.OF);
 
   print_asm_template2(cmp);
 }
