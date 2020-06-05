@@ -48,6 +48,13 @@ typedef struct {
 	  };
 	  rtlreg_t val;//初值
   }eflags;
+
+  rtlreg_t cs;//cs寄存器
+  struct{
+	uint16_t limit;//16位
+	uint32_t base;//32位
+	}idtr;
+
 } CPU_state;
 
 extern CPU_state cpu;

@@ -3,8 +3,15 @@
 void diff_test_skip_qemu();
 void diff_test_skip_nemu();
 
+extern void raise_intr(uint8_t NO, vaddr_t ret_addr);
+
 make_EHelper(lidt) {
-  TODO();
+  //TODO();
+  rtl_lm(&t0, &id_dest->addr, 2);
+  cpu.idtr.limit = t0;
+  t1 = id_dest->addr + 2;
+  rtl_lm(&t0, &t1, 4);
+  cpu.idtr.base = (t0 & (decoding.is_operand_size_16 ? 0x00FFFFFF : 0xFFFFFFFF));
 
   print_asm_template1(lidt);
 }
@@ -26,7 +33,8 @@ make_EHelper(mov_cr2r) {
 }
 
 make_EHelper(int) {
-  TODO();
+  //TODO();
+  raise_intr(id_dest->val,*eip);//直接调用
 
   print_asm("int %s", id_dest->str);
 
