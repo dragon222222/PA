@@ -115,7 +115,23 @@ make_EHelper(dec) {
 }
 
 make_EHelper(neg) {
-  TODO();
+  //TODO();
+  id_src->val=0;
+  rtl_sub(&t2,&id_src->val,&id_dest->val);
+  operand_write(id_dest, &t2);
+  if(id_dest->val==0)
+  {
+	  uint32_t aaa=0;
+	  rtl_set_CF(&aaa);}
+  else{
+	  uint32_t aaa=1;
+	  rtl_set_CF(&aaa);
+  }
+  rtl_xor(&t0, &id_dest->val, &id_src->val);
+  rtl_xor(&t1, &id_dest->val, &t2);
+  rtl_and(&t0, &t0, &t1);
+  rtl_msb(&t0, &t0, id_dest->width);
+  rtl_set_OF(&t0);
 
 
   print_asm_template1(neg);
