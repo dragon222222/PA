@@ -11,8 +11,18 @@ static inline uintptr_t sys_open(uintptr_t pathname, uintptr_t flags, uintptr_t 
 
 static inline uintptr_t sys_write(uintptr_t fd, uintptr_t buf, uintptr_t len) {
   //TODO();
-  Log("Call sys_write");
-  return fs_write(fd,(void *)buf,len);
+  //Log("sys_write");
+  //return fs_write(fd,(void *)buf,len);
+  const char *p=(void *)buf;
+  int i=0;
+  if(fd==1||fd==2)
+  {
+          for(i=0;i<len;++i)
+                  _putc(p[i]);
+  }
+  else
+          return -1;
+  return len;
 }
 
 static inline uintptr_t sys_read(uintptr_t fd, uintptr_t buf, uintptr_t len) {
