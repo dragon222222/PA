@@ -9,10 +9,11 @@ static inline uintptr_t sys_open(uintptr_t pathname, uintptr_t flags, uintptr_t 
   return 1;
 }
 
-static inline uintptr_t sys_write(uintptr_t fd, uintptr_t buf, uintptr_t len) {
+static inline uintptr_t sys_write(_RegSet *r,uintptr_t fd, uintptr_t buf, uintptr_t len) {
   //TODO();
-  Log("sys_write");
-  return fs_write(fd,(void *)buf,len);
+  //Log("sys_write");
+  SYSCALL_ARG1(r)=fs_write(fd,(void *)buf,len);
+  return 1;
   /*const char *p=(void *)buf;
   int i=0;
   if(fd==1||fd==2)
@@ -39,10 +40,10 @@ static inline uintptr_t sys_close(uintptr_t fd) {
   return 1;
 }
 
-static inline uintptr_t sys_brk(uintptr_t new_brk) {
+static inline uintptr_t sys_brk(_RegSet *r,uintptr_t new_brk) {
   //TODO();
-  int i=0;
-  return i;
+  SYSCALL_ARG1(r)=0;
+  return 1;
 }
 
 _RegSet* do_syscall(_RegSet *r) {
@@ -60,10 +61,10 @@ _RegSet* do_syscall(_RegSet *r) {
 	  _halt(SYSCALL_ARG2(r));
 	  break;
     case SYS_write:
-	  SYSCALL_ARG1(r)= sys_write(a[1],a[2],a[3]);
+	  sys_write(r,a[1],a[2],a[3]);
 	  break;
     case SYS_brk:  
-	  SYSCALL_ARG1(r) = sys_brk(a[1]);
+	  sys_brk(r,a[1]);
 	  break;
     default: panic("Unhandled syscall ID = %d", a[0]);
   }
