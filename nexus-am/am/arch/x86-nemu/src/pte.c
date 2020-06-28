@@ -81,7 +81,7 @@ void _unmap(_Protect *p, void *va) {
 }
 
 _RegSet *_umake(_Protect *p, _Area ustack, _Area kstack, void *entry, char *const argv[], char *const envp[]) {
-  uintptr_t pi = (uintptr_t) ustack.end;
+  /*uintptr_t pi = (uintptr_t) ustack.end;
   for(int i=0;i<3;i++){
 	  pi -=4;
 	  *(uint32_t *)pi=0;
@@ -97,5 +97,29 @@ _RegSet *_umake(_Protect *p, _Area ustack, _Area kstack, void *entry, char *cons
 	  pi -=4;
 	  *(uint32_t *)pi =0;
   }
-  return (_RegSet *)pi;
+  return (_RegSet *)pi;*/
+  uintptr_t pi = (uintptr_t) ustack.end;
+     // _start()
+     pi -= 4; *(uintptr_t *)pi = 0; 
+     pi -= 4; *(uintptr_t *)pi = 0; 
+     pi -= 4; *(uintptr_t *)pi = 0; 
+     pi -= 4; *(uintptr_t *)pi = 0; 
+     // trap()
+     pi = pi - sizeof(_RegSet);
+     _RegSet regs;
+     regs.eflags = 0x00000202;
+     regs.cs = 0x8;
+     regs.eip = 0x8048000;
+     regs.error_code = 0;
+     regs.irq = 0;
+     regs.eax = 0;
+     regs.ecx = 0;
+     regs.edx = 0;
+     regs.ebx = 0;
+     regs.esp = 0;
+     regs.ebp = 0;
+     regs.esi = 0;
+     regs.edi = 0;
+     *(_RegSet *)pi = regs;
+     return (_RegSet *)pi;	
 }
