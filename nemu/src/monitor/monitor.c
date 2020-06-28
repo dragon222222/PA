@@ -85,6 +85,7 @@ static inline void restart() {
   
   cpu.eflags.val = 0x00000002;//初值为2
   cpu.cs = 0x8;   //初始化cs寄存器
+  cpu.cr0.val = 0x60000011;
 #ifdef DIFF_TEST
   init_qemu_reg();
 #endif

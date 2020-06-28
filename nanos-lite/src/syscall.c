@@ -41,7 +41,7 @@ static inline uintptr_t sys_close(uintptr_t fd) {
 
 static inline uintptr_t sys_brk(uintptr_t new_brk) {
   //TODO();
-  return 0;
+  return mm_brk(new_brk);
 }
 
 _RegSet* do_syscall(_RegSet *r) {
@@ -62,7 +62,7 @@ _RegSet* do_syscall(_RegSet *r) {
 	  SYSCALL_ARG1(r)=sys_write(a[1],a[2],a[3]);
 	  break;
     case SYS_brk:  
-	  SYSCALL_ARG1(r)=sys_brk(a[1]);
+	  SYSCALL_ARG1(r)=sys_brk(SYSCALL_ARG2(r));
 	  break;
     case SYS_open: 
 	  SYSCALL_ARG1(r) = sys_open(a[1], a[2], a[3]) ; 
